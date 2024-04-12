@@ -1,5 +1,8 @@
 import { Box, styled, Typography } from "@mui/material";
 import { UnfoldMoreDouble, Search } from "@mui/icons-material";
+import { useContext } from "react";
+import { AccountContext } from "../../../context/AccountProvider";
+
 
 const Header = styled(Box)`
   height: 84px;
@@ -44,22 +47,27 @@ const SearchIcon = styled(Search)`
     color: #ffd700;
     cursor: pointer;
     `
-const ChatHeader = ({ person }) => {
-  return (
-    <Header>
-      <Left>
-        <Image src={person.picture} alt="dp" className="rounded-cicrcle img-fluid" />
-        <Box>
-          <Name>{person.name}</Name>
-          <OnlineStatus>Offline</OnlineStatus>
-        </Box>
-      </Left>
-      <Right>
-        <SearchIcon />
-        <MenuItem />
-      </Right>
-    </Header>
-  );
-};
+    const ChatHeader = ({ person }) => {
 
+      const { activeUsers } = useContext(AccountContext);
+    
+      return (
+        <Header>
+          <Left>
+            <Image src={person.picture} alt="dp" className="rounded-cicrcle img-fluid" />
+            <Box>
+              <Name>{person.name}</Name>
+              <OnlineStatus>
+                {activeUsers && activeUsers.find(user => user.sub === person.sub) ? 'online' : 'offline' }
+              </OnlineStatus>
+            </Box>
+          </Left>
+          <Right>
+            <SearchIcon />
+            <MenuItem />
+          </Right>
+        </Header>
+      );
+    };
+    
 export default ChatHeader;

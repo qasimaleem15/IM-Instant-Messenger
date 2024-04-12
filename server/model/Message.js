@@ -21,6 +21,6 @@ const MessageSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const message = mongoose.model('Message', MessageSchema);
+const message = mongoose.model('messages', MessageSchema);
 
 export default message;

@@ -16,9 +16,19 @@ const Messeges = ({ person, conversation }) => {
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState([]);
   const [newMessageFlag, setnewMessageFlag] = useState(false);
-  const { account } = useContext(AccountContext);
+  const { account, socket } = useContext(AccountContext);
   const [file, setFile] = useState();
   // const scrollRef = useRef();
+  const [incomingMessage, setIncomeMessage] = useState(null);
+
+  useEffect(() => {
+    socket.current.on('getMessage', data => {
+      setIncomeMessage({
+        ...data,
+        createdAt: Date.now()
+      })
+    })
+  }, [])
 
   useEffect(() => {
     const getMessagesDetails = async () => {
@@ -26,27 +36,32 @@ const Messeges = ({ person, conversation }) => {
       setMessages(data);
     };
     conversation._id && getMessagesDetails();
-  }, [person._id, conversation._id, newMessageFlag]);
+  }, [person._id, conversation._id, newMessageFlag])
+
+  useEffect(() => {
+    incomingMessage && conversation?.members?.includes(incomingMessage.senderId) && 
+    setMessages(prev => [...prev, incomingMessage])
+  }, [incomingMessage, conversation])
 
     // useEffect(() => {
     //   scrollRef.current?.scrollIntoView({transition: "smooth"})
     // }, [messages])
 
-  const sendText = async (e) => {
-    const code = e.keyCode || e.which;
-    if (code === 13) {
-      let message = {
-        senderId: account.sub,
-        receiverId: person.sub,
-        conversationId: conversation._id, // Corrected access to conversation._id
-        type: "text",
-        text: value
-      };
-     await newMessage(message);
-
-     setValue(" ");
-     setnewMessageFlag(prev => !prev)
-    }
+    const sendText = async (e) => {
+      const code = e.keyCode || e.which;
+      if (code === 13) {
+          let message = {
+              senderId: account.sub,
+              receiverId: person.sub,
+              conversationId: conversation._id, // Corrected access to conversation._id
+              type: "text",
+              text: value
+          };
+          socket.current.emit('sendMessage', message);
+          await newMessage(message);
+          setValue(""); // Remove extra space
+          setnewMessageFlag(prev => !prev);
+      }
   }
 
   return (

@@ -51,7 +51,7 @@ const InfoDrawer = ({open, setOpen}) =>{ // Object Destructring Method
         >
             <Header>
                <ArrowBack onClick={() => setOpen(false)}  className="cursor_pointer drawer_arrow"/> 
-               <Typography>Profile</Typography>
+               <Typography>Screen Sharing</Typography>
             </Header>
             <Component>
                 <Profile />

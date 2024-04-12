@@ -4,6 +4,8 @@ import { AccountContext } from "../../../context/AccountProvider";
 import { Chat as MessageIcon, ScreenShare } from "@mui/icons-material";
 import MoreMenu from "./MoreMenu";
 import InfoDrawer from "../../Drawer/InfoDrawer";
+import ScreenShareInfoDrawer from "../../screenshare/Drawer/ScreenShareInfoDrawer";
+import ScreenShareButton from "../../screenshare/screenshare";
 
 const Component = styled(Box)`
   height: 84px;
@@ -15,19 +17,23 @@ const UserDpbox = styled(Box)`
   height: 80px;
   width: 80px;
   margin-left: 1rem;
-  curser: pointer;
+  cursor: pointer;
 `;
-// const ContainerLeft = styled(Box)`
-//   height: 10vh;
-// `;
 
 const MenuHeader = () => {
-  const [openDrawer, setOpenDrawer] = useState(false);
+  const [openProfileDrawer, setOpenProfileDrawer] = useState(false);
+  const [openScreenShareDrawer, setOpenScreenShareDrawer] = useState(false);
 
   const { account } = useContext(AccountContext);
-  const toggleDrawer = () => {
-    setOpenDrawer(true);
+
+  const toggleProfileDrawer = () => {
+    setOpenProfileDrawer(!openProfileDrawer);
   };
+
+  const toggleScreenShareDrawer = () => {
+    setOpenScreenShareDrawer(!openScreenShareDrawer);
+  };
+
   return (
     <>
       <Box className="container p-0 ">
@@ -37,19 +43,24 @@ const MenuHeader = () => {
               src={account.picture}
               alt="User DP"
               className="img-fluid rounded-circle cursor_pointer"
-              onClick={() => toggleDrawer()}
+              onClick={() => toggleProfileDrawer()}
             />
-
           </UserDpbox>
           <Box className="col-md-8 Menuitems">
             <MessageIcon className="menu_icon1" />
-            <ScreenShare className="menu_icon" />
-            <MoreMenu setOpenDrawer={setOpenDrawer} className="menu_icon" />
+            <ScreenShare className="menu_icon" onClick={() => toggleScreenShareDrawer()} />
+            <MoreMenu setOpenDrawer={setOpenProfileDrawer} className="menu_icon" />
           </Box>
         </Component>
       </Box>
-      <InfoDrawer open={openDrawer} setOpen={setOpenDrawer} />
-
+      <InfoDrawer open={openProfileDrawer} setOpen={setOpenProfileDrawer}>
+        {/* Content for the profile InfoDrawer */}
+      </InfoDrawer>
+      <ScreenShareInfoDrawer open={openScreenShareDrawer} setOpen={setOpenScreenShareDrawer}>
+        {/* Content for the screen sharing drawer */}
+        {/* You can include the ScreenShareButton component here */}
+        <ScreenShareButton />
+      </ScreenShareInfoDrawer>
     </>
   );
 };
