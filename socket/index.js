@@ -24,12 +24,13 @@ io.on('connection', (socket) => {
 
     socket.on("sendMessage", data => {
         const user = getUser(data.receiverId);
-        if (user) {
-            io.to(user.socketId).emit('getMessage', data);
-        } else {
-            console.log(`User with receiverId ${data.receiverId} not found`);
-            // Handle the case where the user is not found
-        }
+        console.log(user);
+    //     if (user) {
+    //         io.to(user.socketId).emit('getMessage', data);
+    //     } else {
+    //         console.log(`User with receiverId ${data.receiverId} not found`);
+    //         // Handle the case where the user is not found
+    //     }
     });
     
 });
